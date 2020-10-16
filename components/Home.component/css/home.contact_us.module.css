@@ -1,0 +1,27 @@
+.root {
+  margin: 0;
+  padding: 0 60px;
+  font-family: "Quicksand", sans-serif;
+  font-size: 30px;
+  /* CLEAR THESE LATER */
+  height: 500px;
+  background-color: gray;
+  padding-top: 50px;
+  color: white;
+}
+
+@media (min-width: 0px) {
+  /* xs */
+}
+
+@media (min-width: 600px) {
+  /* sm */
+}
+
+@media (min-width: 960px) {
+  /* md */
+}
+
+@media (min-width: 1280px) {
+  /* lg */
+}
