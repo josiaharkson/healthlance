@@ -23,3 +23,6 @@
 ## Author
 
 - [Josiah Arkson](https://github.com/josiaharkson)
+
+## Live Deployment
+https://healthlance.herokuapp.com/
