@@ -13,10 +13,6 @@
 - Clone the application and run `yarn install` or `npm install`
 - Run `yarn dev` or `npm run dev` to start development server
 
-## API Documentation
-
-- [Swagger Documentation on Heroku](https://gender-wise.herokuapp.com/api/docs)
-
 ## Technologies Used
 
 - Server - Node.js (Next.js / Express)
