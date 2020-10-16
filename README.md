@@ -1,5 +1,6 @@
 # Healthlance App
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d16278ae0aae460f9506312462bba7b8)](https://app.codacy.com/gh/josiaharkson/healthlance?utm_source=github.com&utm_medium=referral&utm_content=josiaharkson/healthlance&utm_campaign=Badge_Grade_Settings)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/147b75a9f218469abf70c17768cc3ea3)](https://www.codacy.com/gh/josiaharkson/healthlance/dashboard?utm_source=github.com&utm_medium=referral&utm_content=josiaharkson/healthlance&utm_campaign=Badge_Grade)
 
 ## An app designed to help individuals cut down or stop the abuse of drugs, alcohol, and other addictive (psychoactive) substances
