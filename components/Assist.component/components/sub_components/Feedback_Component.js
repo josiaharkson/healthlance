@@ -126,7 +126,7 @@ export const SecondComp = ({ results, substances }) => {
                       <b>Risk Level:</b> {item.riskLevel}{" "}
                       <RiskColored type={item.riskLevel.toLowerCase()} ml="1" />{" "}
                     </div>
-                    {/* <div>Substance Involvement Score: {item.value}</div> */}
+                  <div>Substance Involvement Score: {item.value}</div>  
                   </div>
                 </AccordionSummary>
               </Accordion>
