@@ -51,7 +51,7 @@ const useStyles = makeStyles({
 });
 
 const Link = ({ text, to }) => {
-  const DOMAIN_NAME = publicRuntimeConfig.DOMAIN_NAME;
+  const DOMAIN_NAME = "https://healthlance.herokuapp.com";
 
   return (
     <a
@@ -65,7 +65,7 @@ const Link = ({ text, to }) => {
 };
 
 const LinkXS = ({ to, text }) => {
-  const DOMAIN_NAME = publicRuntimeConfig.DOMAIN_NAME;
+  const DOMAIN_NAME = "https://healthlance.herokuapp.com";
 
   return (
     <a
