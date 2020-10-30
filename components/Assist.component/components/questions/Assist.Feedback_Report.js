@@ -1,55 +1,86 @@
 import React from "react";
 import axios from "axios";
 import { connect } from "react-redux";
+import Hidden from "@material-ui/core/Hidden";
 
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import Divider from "@material-ui/core/Divider";
-
-import Styles from "../../css/assist.module.css";
 
 import AssisQ_Nav from "./Assist.Q_Nav";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Styles from "../../css/assist.question.module.css";
+
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Slide from "@material-ui/core/Slide";
+import SnackBar from "../../../general/SnackBar";
+import { animateScroll as scroll } from "react-scroll";
+import Fab from "@material-ui/core/Fab";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import {
+  FirstComp,
+  SecondComp,
+  ThirdComp,
+} from "../sub_components/Feedback_Component";
+
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Feedback_Save_dialog from "../sub_components/Feedback_save.dialog";
 
 const useStyles = makeStyles(theme => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
   },
+  appBar: {
+    position: "fixed",
+  },
+  title: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  },
 }));
 
 const Index = props => {
-  const { answers } = props;
-  const classes = useStyles();
+  const { answers, user } = props;
+  const { id } = user;
 
-  const [view, setView] = React.useState("first");
   const [results, setResults] = React.useState(null);
   const [substances, setSubstances] = React.useState(null);
 
+  const [view, setView] = React.useState("first");
+
+  const handleClickOpen = () => {
+    setView("second");
+  };
+
+  const handleClose = () => {
+    setView("first");
+  };
+
   const getResults = async () => {
     try {
-      const res = await axios.post("/api/assist/calculate-answer", {
+      console.log({ answers });
+      const res = await axios.post("/api/assist/assesment/calculate", {
         answers,
       });
 
       const { Q_8, getRiskLevels, SUB_J } = res.data;
+      console.log({ data: res.data });
       setResults({ Q_8, getRiskLevels, SUB_J });
-      setView("second");
+      handleClickOpen();
     } catch (e) {}
   };
 
   const getSubstances = async () => {
     try {
-      const res = await axios.get("/api/assist/get-substances");
+      const res = await axios.get("/api/assist/substance/all");
 
       setSubstances(res.data);
+      console.log(222222, res.data);
     } catch (e) {}
   };
 
@@ -59,121 +90,187 @@ const Index = props => {
     if (!substances) getSubstances();
   });
 
+  if (view === "second")
+    return (
+      <DialogComponent
+        handleClose={handleClose}
+        results={results}
+        substances={substances}
+        answers={answers}
+        id={id}
+      />
+    );
   return (
-    <div className={Styles.body}>
+    <>
       <AssisQ_Nav qNumber={"REPORT"} onClick={() => onProceed()} />
-      <Paper elevation={10} className={Styles.body_2}>
-        {view === "first" && <FirstComp getResults={getResults} />}
-        {view === "second" && (
-          <SecondComp results={results} substances={substances} />
-        )}
-      </Paper>
-    </div>
+      <div className={Styles.root_2}>
+        <div className={Styles.question_head}>
+          <h1>Welcome To feedback report!</h1>
+          <h3>Congratulaions You Have Completed The Questions Successfully</h3>
+
+          <Button
+            color="primary"
+            variant="contained"
+            style={{ padding: 10 }}
+            onClick={() => getResults()}
+          >
+            Click Here to Get Your Results
+          </Button>
+        </div>
+      </div>
+    </>
   );
 };
 
 const mapPropsToComponent = store => ({
   answers: store.assist.answers,
+  user: store.auth.user,
 });
 
 export default connect(mapPropsToComponent)(Index);
 
-const FirstComp = ({ getResults }) => (
-  <React.Fragment>
-    <Divider />
-    <h1>Welcome To feedback report!</h1>
-    <h3>Congratulaions You Have Completed The Questions Successfully</h3>
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
-    <Button
-      color="primary"
-      variant="outlined"
-      style={{ padding: 20 }}
-      onClick={() => getResults()}
-    >
-      Click Here to Get Your Results
-    </Button>
-  </React.Fragment>
-);
+function myFunction(document, setProgress) {
+  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  var height =
+    document.documentElement.scrollHeight -
+    document.documentElement.clientHeight;
+  var scrolled = (winScroll / height) * 100;
 
-const SecondComp = ({ results, substances }) => {
+  setProgress(parseInt(scrolled));
+}
+
+const DialogComponent = ({ handleClose, results, substances, answers, id }) => {
   const classes = useStyles();
-  const { getRiskLevels, Q_8, SUB_J } = results;
-  console.log({ substances, Q_8, SUB_J });
+  const [progress, setProgress] = React.useState(0);
+
+  const [open, setOpen] = React.useState(false);
+  const [type, setType] = React.useState("");
+  const [msg, setMsg] = React.useState("");
+
+  // DIALOG PROPS
+  const [openD, setOpenD] = React.useState(false);
+
+  const handleClickOpen_dialog = () => {
+    setOpenD(true);
+  };
+
+  const handleClose_dialog = value => {
+    setOpenD(false);
+  };
+
+  React.useEffect(() => {
+    window.onscroll = function () {
+      myFunction(document, setProgress);
+    };
+  }, []);
+
   return (
-    <React.Fragment>
-      <Divider />
-      <h1>Second Report</h1>
-
-      <Divider />
-
-      {getRiskLevels.map(item => {
-        if (item.substance === "J")
-          return (
-            <React.Fragment key={item.value}>
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`panel1a-content-${item.value}`}
-                  id={`panel1a-header-${item.value}`}
-                >
-                  <div className={classes.heading}>
-                    <div>Substance: {SUB_J}</div>
-                    <div>Risk Level: {item.riskLevel}</div>
-                    <div>Substance Involvement Score: {item.value}</div>
-                  </div>
-                </AccordionSummary>
-              </Accordion>
-            </React.Fragment>
-          );
-        let substance = getFirstPartName(substances[item.substance].name);
-
-        return (
-          <React.Fragment key={item.value}>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel1a-content-${item.value}`}
-                id={`panel1a-header-${item.value}`}
-              >
-                <div className={classes.heading}>
-                  <div>Substance: {substance}</div>
-                  <div>Risk Level: {item.riskLevel}</div>
-                  <div>Substance Involvement Score: {item.value}</div>
-                </div>
-              </AccordionSummary>
-              <AccordionDetails>
-                <div>
-                  <h4>Regular use of {substance} is associated with: </h4>
-                  <ul>
-                    {substances[item.substance].risks.map(r => (
-                      <li key={r}>{r}</li>
-                    ))}
-                  </ul>
-                  <h5>
-                    Your risk of experiencing these harms is: {item.riskLevel}
-                  </h5>
-                </div>
-              </AccordionDetails>
-            </Accordion>
-          </React.Fragment>
-        );
-      })}
-
-      {Q_8.trim() && (
-        <React.Fragment>
-          <h3>
-            You indicated that you have injected drugs
-            {Q_8 === "Yes, but not in the past 3 months" && ", but not"} in the
-            last 3 months
-          </h3>
-          <Button variant="contained" color="primary">
-            {" "}
-            VIEW - RISKS OF INJECTING{" "}
-          </Button>
-        </React.Fragment>
+    <div>
+      {open && (
+        <SnackBar
+          handleClose={() => setOpen(false)}
+          type={type}
+          message={msg}
+        />
       )}
-    </React.Fragment>
+
+      <Feedback_Save_dialog
+        answers={answers}
+        open={openD}
+        handleClose={handleClose_dialog}
+        id={id}
+        setMsg={setMsg}
+        setType={setType}
+        setOpen={setOpen}
+      />
+
+      <AppBar className={classes.appBar}>
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={handleClose}
+            aria-label="close"
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title}>
+            Feedback Report
+          </Typography>
+
+          <Hidden only={["xs", "sm"]}>
+            <Button
+              color="inherit"
+              color="secondary"
+              variant="contained"
+              onClick={() => handleClickOpen_dialog()}
+            >
+              save this result
+            </Button>
+          </Hidden>
+
+          <Button color="inherit" onClick={handleClose}>
+            close
+          </Button>
+        </Toolbar>
+
+        <LinearProgress
+          variant="determinate"
+          color="secondary"
+          value={progress}
+        />
+      </AppBar>
+      <Button
+        color="inherit"
+        color="secondary"
+        variant="contained"
+        onClick={() => handleClickOpen_dialog()}
+        style={{ margin: 30 }}
+      >
+        save this result
+      </Button>
+      <div className={Styles.feedback_body}>
+        <div>
+          <div className={Styles.feedback_title}>
+            {" "}
+            What do your scores mean?
+          </div>
+          <FirstComp />
+        </div>
+
+        <div>
+          <div className={Styles.feedback_title}>Your Risk Levels</div>
+          <div className={Styles.feedback_title_direction}>
+            any box below to expand more information
+          </div>
+          <SecondComp results={results} substances={substances} />
+        </div>
+
+        <div>
+          {/* {results && results.Q_8.trim() && ( */}
+          <div>
+            <div className={Styles.feedback_title}>
+              Risks associated with injecting drugs
+            </div>
+            <ThirdComp />
+          </div>
+          {/* )} */}
+        </div>
+      </div>
+
+      <Fab
+        color="secondary"
+        size="small"
+        aria-label="scroll back to top"
+        onClick={() => scroll.scrollToTop()}
+        style={{ float: "right", marginRight: 30, marginTop: -30, zIndex: 100 }}
+      >
+        <KeyboardArrowUpIcon />
+      </Fab>
+    </div>
   );
 };
-
-const getFirstPartName = name => name.split("(")[0].trim();

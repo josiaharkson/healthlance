@@ -1,11 +1,20 @@
 import React from "react";
 import Link from "next/link";
-import Button from "@material-ui/core/Button";
 import Styles from "../css/home.header.module.css";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
-import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
+import { useTheme } from "@material-ui/core/styles";
+
 import Slide from "@material-ui/core/Slide";
-import Hidden from "@material-ui/core/Hidden";
+
+import SwipeableViews from "react-swipeable-views";
+import { autoPlay } from "react-swipeable-views-utils";
+import Pagination from "./Slider.pagination";
+import AlarmOnIcon from "@material-ui/icons/AlarmOn";
+
+import Fab from "@material-ui/core/Fab";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import { animateScroll as scroll } from "react-scroll";
+
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const MainText = () => {
   const theme = useTheme();
@@ -21,7 +30,7 @@ const MainText = () => {
         unmountOnExit
         timeout={100}
       >
-        <div className={Styles.text_first} style={{ color: "black" }}>
+        <div className={Styles.text_first} style={{ color: "#0e4274" }}>
           Know your level of risk
         </div>
       </Slide>
@@ -36,21 +45,30 @@ const MainText = () => {
           <div className={Styles.text_second} style={{ color: "GrayText" }}>
             Associated with use of Alcohol, tobacco products and other drugs
           </div>
-          <Link href="assist_v3_english">
+          <div className={Styles.text_third} style={{ color: "black" }}>
+            <div>
+              {" "}
+              <AlarmOnIcon fontSize={"inherit"} />{" "}
+            </div>
+            <div>5 to 10 minuites</div>
+          </div>
+          <Link href="/alcohol-substance-test">
             <div className={Styles.button} style={{ background: secondary }}>
               <span>TAKE TEST NOW </span>
             </div>
           </Link>
+
+          <Fab
+            color="secondary"
+            size="small"
+            aria-label="scroll back to top"
+            onClick={() => scroll.scrollToBottom()}
+            style={{ float: "right" }}
+          >
+            <KeyboardArrowDownIcon />
+          </Fab>
         </div>
       </Slide>
-    </React.Fragment>
-  );
-};
-
-const MainImage = () => {
-  return (
-    <React.Fragment>
-      <img src="/svg/responsive.svg" alt="fff" className={Styles.img} />
     </React.Fragment>
   );
 };
@@ -70,21 +88,67 @@ const Index = () => {
 };
 
 export default Index;
-// {
-//   /* <Slide
-//         direction="right"
-//         in={true}
-//         mountOnEnter
-//         unmountOnExit
-//         timeout={3000}
-//       >
-//         <div className={Styles.text_third} style={{ color: primary }}>
-//           An adaptation of the WHO Alcohol, Smoking and Substance Involvement
-//           Screening Test (ASSIST) and Feedback - Version 3.0
-//         </div>
-//       </Slide> */
-// }
 
-// <Hidden only={["xs", "sm",  ]}>
+const MainImage = () => {
+  const [index, setIndex] = React.useState(0);
 
-// </Hidden>
+  const handleChangeIndex = index => {
+    setIndex(index);
+  };
+
+  return (
+    <div className={Styles.sliding_quote_wrapper}>
+      <Pagination dots={3} index={index} onChangeIndex={handleChangeIndex} />
+      <AutoPlaySwipeableViews
+        interval={2000}
+        index={index}
+        onChangeIndex={handleChangeIndex}
+      >
+        <div>
+          Every{" "}
+          <span>
+            <b>10 seconds</b>{" "}
+          </span>
+          a person{" "}
+          <span>
+            <b>dies</b>
+          </span>{" "}
+          from alcohol related causes including cancers, heart disease, traffic
+          crashes & violence <br />
+          <i>
+            <b>- SAFER (WHO)</b>
+          </i>
+        </div>
+        <div>
+          Around{" "}
+          <span>
+            <b>269 million</b>
+          </span>{" "}
+          people used drugs worldwide in 2018, while over{" "}
+          <span>
+            <b>35 million</b>
+          </span>{" "}
+          people suffer from drug use disorders <br />{" "}
+          <i>
+            <b>- Worldwide Drug Report (2020)</b>
+          </i>
+        </div>
+        <div>
+          Almost half of all people who inject drugs, an esimated{" "}
+          <span>
+            <b>5.5 million</b>
+          </span>{" "}
+          people worldwide, are living with{" "}
+          <span>
+            <b>hepatitis C</b>
+          </span>{" "}
+          <br />
+          <i>
+            {" "}
+            <b>- Worldwide Drug Report (2020)</b>
+          </i>
+        </div>
+      </AutoPlaySwipeableViews>
+    </div>
+  );
+};

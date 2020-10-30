@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -9,6 +10,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -63,43 +66,53 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const texts = {
-  one: `Thank you for agreeing to take part in this brief interview about
-  alcohol, tobacco products and other drugs. I am going to ask you some
-  questions about your experience of using these substances across your
-  lifetime and in the past three months. These substances can be smoked,
-  swallowed, snorted, inhaled, injected or taken in the form of pills
-  (show drug card).`,
-  two: `Some of the substances listed may be prescribed by a doctor
-  (like amphetamines, sedatives, pain medications)
-  we will not record medications that are used as p. For this interview,rescribed by your
-  doctor.`,
-  three: `However, if you have taken such medications for reasons other
+function StepperComp({ checked, setChecked, user }) {
+  const classes = useStyles();
+  const { fullname } = user;
+  const matches = useMediaQuery("(min-width:600px)");
+
+  const texts = {
+    one: (
+      <>
+        <div style={{ marginBottom: -10, marginTop: matches ? 0 : -30 }}>
+          Hi! {fullname.split(" ")[0]}
+        </div>{" "}
+        <br />
+        Thank you for agreeing to take part in this brief interview about
+        alcohol, tobacco products and other drugs. I am going to ask you some
+        questions about your experience of using these substances across your
+        lifetime and in the past three months. These substances can be smoked,
+        swallowed, snorted, inhaled, injected or taken in the form of pills
+        (show drug card).
+      </>
+    ),
+    two: `Some of the substances listed may be prescribed by a doctor
+  (like amphetamines, sedatives, pain medications),
+  we will not record medications that are used as prescribed for this interview.`,
+    three: `However, if you have taken such medications for reasons other
   than prescription, or taken them more frequently or at higher doses
   than prescribed, please let me know. While we are also interested in
   knowing about your use of various illicit drugs, please be assured
   that information on such use will be treated as strictly confidential.`,
-};
+  };
 
-function getSteps() {
-  return ["", "", ""];
-}
-
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return texts.one;
-    case 1:
-      return texts.two;
-    case 2:
-      return texts.three;
-    default:
-      return "Unknown step";
+  function getSteps() {
+    return ["", "", ""];
   }
-}
 
-export default function StepperComp({ checked, setChecked }) {
-  const classes = useStyles();
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return texts.one;
+      case 1:
+        return texts.two;
+      case 2:
+        return texts.three;
+      default:
+        return "Unknown step";
+    }
+  }
+
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const steps = getSteps();
@@ -210,18 +223,6 @@ export default function StepperComp({ checked, setChecked }) {
               >
                 Back
               </Button>
-              {isStepOptional(activeStep) && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSkip}
-                  className={classes.button}
-                  variant="outlined"
-                  size="small"
-                >
-                  Skip
-                </Button>
-              )}
 
               <Button
                 variant="contained"
@@ -247,3 +248,9 @@ export default function StepperComp({ checked, setChecked }) {
     </div>
   );
 }
+
+const mapPropsToComponent = store => ({
+  user: store.auth.user,
+});
+
+export default connect(mapPropsToComponent)(StepperComp);

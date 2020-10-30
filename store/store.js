@@ -23,7 +23,7 @@ const makeStore = ({ isServer }) => {
 
     const persistConfig = {
       key: "nextjs",
-      // whitelist: ["counter"], // only counter will be persisted, add other reducers if needed
+      whitelist: ["auth"], // only counter will be persisted, add other reducers if needed
       storage, // if needed, use a safer storage
     };
 

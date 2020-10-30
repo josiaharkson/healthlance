@@ -7,29 +7,26 @@ import Divider from "@material-ui/core/Divider";
 import Radio from "@material-ui/core/Radio";
 import TextField from "@material-ui/core/TextField";
 
-import Styles from "../../css/assist.module.css";
+import Styles from "../../css/assist.question.module.css";
 import { go_to_Q2 } from "../../../../store/actions/assist";
 
 import AssisQ_Nav from "./Assist.Q_Nav";
-
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 300,
-  },
-});
+import Exit_Dialog from "../Assist.Exit_Dialog";
 
 const Index = props => {
-  const classes = useStyles();
+  console.log("check rerender 1");
   const { substances } = props;
   const [others, setOthers] = React.useState("");
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const [keys, setKeys] = React.useState({
     A: false,
@@ -73,12 +70,7 @@ const Index = props => {
     const numberOfSelectedYES = myArr.filter(item => keys[item] === true);
 
     if (!numberOfSelectedYES.length) {
-      alert(
-        "Kindly note that you have answered 'NO' to all items. Suggesting that you have never used these substances. Thank you for participating in this ASSIST. Your Interview Ends Here"
-      );
-
-      // EXIT CALL
-      return (window.location = "/");
+      return handleClickOpen();
     }
 
     props.go_to_Q2({
@@ -89,100 +81,98 @@ const Index = props => {
   };
 
   return (
-    <div className={Styles.body}>
+    <>
+      <Exit_Dialog open={open} handleClose={handleClose} />
       <AssisQ_Nav qNumber={1} onClick={() => onProceed()} />
-      <div elevation={10} className={Styles.body_2}>
-        <Typography variant="body1" style={{ color: "black" }}>
+
+      <div className={Styles.root_1}>
+        <div className={Styles.question_head}>
           In your life, which of the following substances have you ever used?
           even when you were in school?
-          <i>(NON-MEDICAL U MEDICAL U MEDICAL USE ONLY)</i>
-        </Typography>
-        <Divider />
+          <span>- NON-MEDICAL USE ONLY</span>
+        </div>
 
-        <TableContainer component={Paper}>
-          <Table
-            className={classes.table}
-            size="small"
-            aria-label="a dense table"
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox"></TableCell>
-                <TableCell></TableCell>
-                <TableCell align="center" padding="checkbox">
-                  Yes
-                </TableCell>
-                <TableCell align="center" padding="checkbox">
-                  No
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {substances.map((item, index) => (
-                <TableRow key={item.id}>
-                  <TableCell padding="checkbox">{index + 1}</TableCell>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell align="center" padding="checkbox">
-                    <Radio
-                      size="small"
-                      checked={keys[item.id] === true}
-                      onChange={e => handleChange(item.id, e.target.value)}
-                      value="true"
-                      name={item.id + 1}
-                      inputProps={{ "aria-label": Math.random() }}
-                    />
-                  </TableCell>
-                  <TableCell align="center" padding="checkbox">
-                    <Radio
-                      size="small"
-                      checked={keys[item.id] === false}
-                      onChange={e => handleChange(item.id, e.target.value)}
-                      value="false"
-                      name={item.id + 4}
-                      inputProps={{ "aria-label": Math.random() }}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+        <div className={Styles.root_1_question}>
+          <div className={Styles.root_1_question_name}></div>
+          <div className={Styles.root_1_question_options}>Yes</div>
+          <div className={Styles.root_1_question_options}>No</div>
+        </div>
 
-              <TableRow>
-                <TableCell padding="checkbox">10</TableCell>
+        <div className={Styles.root_1_questions_container}>
+          {substances.map((item, index) => (
+            <React.Fragment key={Math.random()}>
+              <QuestionComponent
+                keys={keys}
+                item={item}
+                handleChange={handleChange}
+              />
+            </React.Fragment>
+          ))}
 
-                <TableCell>
-                  Other - specify:
-                  <TextField
-                    margin="dense"
-                    value={others}
-                    onChange={e => handleChangeJ(e)}
-                    style={{ width: "50%", marginLeft: 30 }}
-                  />
-                </TableCell>
-                {others.trim() ? (
-                  <TableCell align="center" padding="checkbox">
-                    <Radio
-                      checked={keys["J"] === true}
-                      onChange={e => handleChange("J", e.target.value)}
-                      value="true"
-                      name={"J"}
-                      inputProps={{ "aria-label": "J" }}
-                    />
-                  </TableCell>
-                ) : null}
-                {others.trim() ? (
-                  <TableCell align="center" padding="checkbox">
-                    <Radio
-                      checked={keys["J"] === false}
-                      onChange={e => handleChange("J", e.target.value)}
-                      value="false"
-                      name={"J"}
-                      inputProps={{ "aria-label": "J" }}
-                    />
-                  </TableCell>
-                ) : null}
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
+          <div className={Styles.root_1_question}>
+            <div className={Styles.root_1_question_name}>
+              Others - specify:{" "}
+              <TextField
+                margin="dense"
+                value={others}
+                onChange={e => handleChangeJ(e)}
+                style={{ width: "50%", marginLeft: 30 }}
+              />
+            </div>
+
+            <div className={Styles.root_1_question_options}>
+              {others.trim() ? (
+                <Radio
+                  checked={keys["J"] === true}
+                  onChange={e => handleChange("J", e.target.value)}
+                  value="true"
+                  name={"J"}
+                  inputProps={{ "aria-label": "J" }}
+                />
+              ) : null}
+            </div>
+            <div className={Styles.root_1_question_options}>
+              {others.trim() ? (
+                <Radio
+                  checked={keys["J"] === false}
+                  onChange={e => handleChange("J", e.target.value)}
+                  value="false"
+                  name={"J"}
+                  inputProps={{ "aria-label": "J" }}
+                />
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const QuestionComponent = ({ item, keys, handleChange }) => {
+  return (
+    <div className={Styles.root_1_question}>
+      <div className={Styles.root_1_question_name}>{item.name}</div>
+
+      <div className={Styles.root_1_question_options}>
+        <Radio
+          size="small"
+          checked={keys[item.id] === true}
+          onChange={e => handleChange(item.id, e.target.value)}
+          value="true"
+          name={item.id + 1}
+          inputProps={{ "aria-label": Math.random() }}
+        />
+      </div>
+      <div className={Styles.root_1_question_options}>
+        <Radio
+          size="small"
+          checked={keys[item.id] === false}
+          onChange={e => handleChange(item.id, e.target.value)}
+          value="false"
+          name={item.id + 4}
+          inputProps={{ "aria-label": Math.random() }}
+        />
       </div>
     </div>
   );

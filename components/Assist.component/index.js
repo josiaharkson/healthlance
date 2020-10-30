@@ -45,8 +45,12 @@ const Index = props => {
         setOnClickNext={setOnClickNext}
       />
       <div className={Styles.root}>
-        {Q_isLoading && <InlineLoader type="dark" />}
-        {!Q_isLoading && <> {Q_Page(questionHistory[0])}</>}
+        {Q_isLoading && (
+          <div>
+            <InlineLoader />{" "}
+          </div>
+        )}
+        {!Q_isLoading && <>{Q_Page(questionHistory[0])}</>}
       </div>
     </>
   );
