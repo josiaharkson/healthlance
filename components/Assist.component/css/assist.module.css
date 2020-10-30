@@ -2,8 +2,9 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  background: rgb(253, 253, 253);
+  background: #f0ebf8;
   height: 100%;
+  overflow-y: scroll;
 }
 
 .body {

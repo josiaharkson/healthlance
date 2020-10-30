@@ -70,7 +70,7 @@ const Index = ({ open, handleClose, setLoading, router }) => {
           onClick={onClickEnd}
           className={classes.Comfortaa}
         >
-          END
+          End and Go back
         </Button>
 
         <Button

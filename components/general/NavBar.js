@@ -1,26 +1,31 @@
 import React from "react";
-import Typography from "@material-ui/core/Typography";
-import Styles from "./navbar.module.css";
-import { useTheme } from "@material-ui/core/styles";
+import Link from "next/link";
+import Slide from "@material-ui/core/Slide";
 
-const NavBar = () => {
-  const theme = useTheme();
-  const primary = theme.palette.primary.main;
-  const secondary = theme.palette.secondary.main;
+import Styles from "./css/navbar.module.css";
+import HomeIcon from "@material-ui/icons/Home";
 
+const NavBar = ({ direction, timeout }) => {
   return (
-    <div className={Styles.root} style={{ color: primary }}>
-      <div className={Styles.left}>
-        <h1 className={Styles.logo}>HealthLance</h1>
-        <h3 className={Styles.btn}>About us</h3>
-        <h3 className={Styles.btn}>Programs</h3>
-        <h3 className={Styles.btn}>Contact Us</h3>
+    <Slide
+      direction={direction ? direction : "right"}
+      in={true}
+      mountOnEnter
+      unmountOnExit
+      timeout={timeout ? timeout : 500}
+    >
+      <div className={Styles.root} style={{ userSelect: "none" }}>
+        <div className={Styles.left}>
+          <h1 className={Styles.logo}>HealthLance</h1>
+          <Link href="/">
+            <div className={Styles.btn} unselectable="on">
+              <HomeIcon fontSize="small" style={{ marginRight: 5 }} />
+              Return Home
+            </div>
+          </Link>
+        </div>
       </div>
-      <div className={Styles.right}>
-        <h3 className={Styles.btn}>Login</h3>
-        <h3 className={Styles.btn}>Signup</h3>
-      </div>
-    </div>
+    </Slide>
   );
 };
 

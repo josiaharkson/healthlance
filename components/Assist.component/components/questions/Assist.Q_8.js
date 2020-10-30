@@ -6,7 +6,6 @@ import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
 import Radio from "@material-ui/core/Radio";
 
-import Styles from "../../css/assist.module.css";
 import { go_to_Feedback_Report } from "../../../../store/actions/assist";
 
 import AssisQ_Nav from "./Assist.Q_Nav";
@@ -18,6 +17,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+
+import Styles from "../../css/assist.question.module.css";
 
 const useStyles = makeStyles(theme => ({
   table: {
@@ -88,170 +89,118 @@ const Index = props => {
   }, [keyValue, patternOfInjecting]);
 
   return (
-    <div className={Styles.body}>
+    <>
       <AssisQ_Nav
         qNumber={8}
         onClick={() => onProceed()}
         diabledNextButton={diabledNextButton}
       />
-      <Paper elevation={10} className={Styles.body_2}>
-        <Divider />
-        <TableContainer component={Paper}>
-          <Table
-            className={classes.table}
+
+      <div className={Styles.root_2}>
+        <div className={Styles.question_head}>
+          Have you ever used any drug by injection?
+          <span>NON-MEDICAL USE ONLY</span>
+        </div>
+
+        <div className={Styles.root_Q_8_wrapper}>
+          <div>No, Never</div>
+          <Radio
             size="small"
-            aria-label="a dense table"
-          >
-            <TableHead className={classes.tb_head}>
-              <TableRow>
-                <TableCell padding="checkbox"></TableCell>
-                <TableCell></TableCell>
-                <TableCell
-                  className={clsx(classes.rot, classes.rot_gray)}
-                  align="center"
-                  padding="checkbox"
-                >
-                  No, Never
-                </TableCell>
-                <TableCell
-                  className={clsx(classes.rot, classes.rot_white)}
-                  align="center"
-                  padding="checkbox"
-                >
-                  Yes, in the past 3 months
-                </TableCell>
-                <TableCell
-                  className={clsx(classes.rot, classes.rot_gray)}
-                  align="center"
-                  padding="checkbox"
-                >
-                  Yes, but not in the past 3 months
-                </TableCell>
-              </TableRow>
-            </TableHead>
+            checked={keyValue === "0"}
+            onChange={e => handleChange(e.target.value)}
+            value="0"
+            name="No, Never"
+            inputProps={{ "aria-label": Math.random() }}
+          />
+        </div>
 
-            <TableBody>
-              <TableRow>
-                <TableCell padding="checkbox">1</TableCell>
-                <TableCell>
-                  Have you ever Have you ever used any drug by injection? used
-                  any drug by injection? (NON-MEDICAL USE ONLY)
-                </TableCell>
-                <TableCell
-                  className={classes.rot_gray}
-                  align="center"
-                  padding="checkbox"
-                >
-                  <Radio
-                    size="small"
-                    checked={keyValue === "0"}
-                    onChange={e => handleChange(e.target.value)}
-                    value="0"
-                    name="No, Never"
-                    inputProps={{ "aria-label": Math.random() }}
-                  />
-                </TableCell>
-                <TableCell
-                  className={classes.rot_white}
-                  align="center"
-                  padding="checkbox"
-                >
-                  <Radio
-                    size="small"
-                    checked={keyValue === "2"}
-                    onChange={e => {
-                      setDiabledNextButton(false);
-                      handleChange(e.target.value);
-                    }}
-                    value="2"
-                    name="Yes, in the past 3 months"
-                    inputProps={{ "aria-label": Math.random() }}
-                  />
-                </TableCell>
+        <div className={Styles.root_Q_8_wrapper}>
+          <div>Yes, in the past 3 months</div>
+          <Radio
+            size="small"
+            checked={keyValue === "2"}
+            onChange={e => {
+              setDiabledNextButton(false);
+              handleChange(e.target.value);
+            }}
+            value="2"
+            name="Yes, in the past 3 months"
+            inputProps={{ "aria-label": Math.random() }}
+          />
+        </div>
+        {keyValue === "2" ? (
+          <div className={Styles.root_Q_8_wrapper_sub}>
+            <h4>Pattern of Injecting?</h4>
 
-                <TableCell
-                  className={classes.rot_gray}
-                  align="center"
-                  padding="checkbox"
-                >
-                  <Radio
-                    size="small"
-                    checked={keyValue === "1"}
-                    onChange={e => {
-                      handleChange(e.target.value);
-                      setPatternOfInjecting(
-                        "Yes, but not in the past 3 months"
-                      );
-                    }}
-                    value="1"
-                    name="Yes, but not in the past 3 months"
-                    inputProps={{ "aria-label": Math.random() }}
-                  />
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-
-          {keyValue === "2" ? (
-            <div style={{ padding: 30 }}>
-              <h3>Pattern of Injecting?</h3>
-
-              <div>
-                <Radio
-                  size="small"
-                  checked={patternOfInjecting === "Once weekly or less"}
-                  onChange={e => setPatternOfInjecting(e.target.value)}
-                  value="Once weekly or less"
-                  name="Yes, but not in the past 3 months"
-                  inputProps={{ "aria-label": Math.random() }}
-                  id="ppp2"
-                />
-                <label htmlFor="ppp2">Once weekly or less</label>
-              </div>
-
-              <div>
-                <Radio
-                  size="small"
-                  checked={patternOfInjecting === "Fewer than 3 days in a row"}
-                  onChange={e => setPatternOfInjecting(e.target.value)}
-                  value="Fewer than 3 days in a row"
-                  name="Yes, but not in the past 3 months"
-                  inputProps={{ "aria-label": Math.random() }}
-                  id="ppp3"
-                />
-                <label htmlFor="ppp3">Fewer than 3 days in a row </label>
-              </div>
-
-              <div>
-                <Radio
-                  size="small"
-                  checked={patternOfInjecting === "More than once per week"}
-                  onChange={e => setPatternOfInjecting(e.target.value)}
-                  value="More than once per week"
-                  name="Yes, but not in the past 3 months"
-                  inputProps={{ "aria-label": Math.random() }}
-                  id="ppp1"
-                />
-                <label htmlFor="ppp1">More than once per week </label>
-              </div>
-
-              <div>
-                <Radio
-                  size="small"
-                  checked={patternOfInjecting === "3 or more days in a row"}
-                  onChange={e => setPatternOfInjecting(e.target.value)}
-                  value="3 or more days in a row"
-                  name="Yes, but not in the past 3 months"
-                  inputProps={{ "aria-label": Math.random() }}
-                  id="ppp4"
-                />
-                <label htmlFor="ppp4">3 or more days in a row</label>
-              </div>
+            <div>
+              <Radio
+                size="small"
+                checked={patternOfInjecting === "Once weekly or less"}
+                onChange={e => setPatternOfInjecting(e.target.value)}
+                value="Once weekly or less"
+                name="Yes, but not in the past 3 months"
+                inputProps={{ "aria-label": Math.random() }}
+                id="ppp2"
+              />
+              <label htmlFor="ppp2">Once weekly or less</label>
             </div>
-          ) : null}
-        </TableContainer>
-      </Paper>
-    </div>
+
+            <div>
+              <Radio
+                size="small"
+                checked={patternOfInjecting === "Fewer than 3 days in a row"}
+                onChange={e => setPatternOfInjecting(e.target.value)}
+                value="Fewer than 3 days in a row"
+                name="Yes, but not in the past 3 months"
+                inputProps={{ "aria-label": Math.random() }}
+                id="ppp3"
+              />
+              <label htmlFor="ppp3">Fewer than 3 days in a row </label>
+            </div>
+
+            <div>
+              <Radio
+                size="small"
+                checked={patternOfInjecting === "More than once per week"}
+                onChange={e => setPatternOfInjecting(e.target.value)}
+                value="More than once per week"
+                name="Yes, but not in the past 3 months"
+                inputProps={{ "aria-label": Math.random() }}
+                id="ppp1"
+              />
+              <label htmlFor="ppp1">More than once per week </label>
+            </div>
+
+            <div>
+              <Radio
+                size="small"
+                checked={patternOfInjecting === "3 or more days in a row"}
+                onChange={e => setPatternOfInjecting(e.target.value)}
+                value="3 or more days in a row"
+                name="Yes, but not in the past 3 months"
+                inputProps={{ "aria-label": Math.random() }}
+                id="ppp4"
+              />
+              <label htmlFor="ppp4">3 or more days in a row</label>
+            </div>
+          </div>
+        ) : null}
+        <div className={Styles.root_Q_8_wrapper}>
+          <div>Yes, but not in the past 3 months</div>
+          <Radio
+            size="small"
+            checked={keyValue === "1"}
+            onChange={e => {
+              handleChange(e.target.value);
+              setPatternOfInjecting("Yes, but not in the past 3 months");
+            }}
+            value="1"
+            name="Yes, but not in the past 3 months"
+            inputProps={{ "aria-label": Math.random() }}
+          />
+        </div>
+      </div>
+    </>
   );
 };
 

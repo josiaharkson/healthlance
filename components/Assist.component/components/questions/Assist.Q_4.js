@@ -7,18 +7,20 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Radio from "@material-ui/core/Radio";
 
-import Styles from "../../css/assist.module.css";
 import { go_to_Q5 } from "../../../../store/actions/assist";
 
 import AssisQ_Nav from "./Assist.Q_Nav";
 
 import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+
+import Styles from "../../css/assist.question.module.css";
+import Hidden from "@material-ui/core/Hidden";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import {
+  QuestionComponentBigScreen,
+  QuestionComponentSmallScreen,
+  TemporaryDrawer,
+} from "../sub_components/4_components";
 
 const useStyles = makeStyles(theme => ({
   table: {
@@ -60,6 +62,28 @@ const Index = props => {
 
   const [keys, setKeys] = React.useState(makeArray(selectedSubstances_Q_2));
 
+  // DRAWER PROPS
+  const [drawer, setDrawer] = React.useState(false);
+  const [selectedItemSM, setSelectedItemSM] = React.useState(null);
+
+  const toggleDrawer = (open, selItem) => event => {
+    if (event) {
+      if (event.type) {
+        if (
+          event.type === "keydown" &&
+          (event.key === "Tab" || event.key === "Shift")
+        ) {
+          return;
+        }
+      }
+    }
+    if (selItem) setSelectedItemSM(selItem);
+    console.log({ selItem });
+    setDrawer(open);
+  };
+
+  // DRAWER PROPS END
+
   const handleChange = (id, value, name) => {
     setKeys(x => {
       let all = x;
@@ -84,159 +108,61 @@ const Index = props => {
   };
 
   return (
-    <div className={Styles.body}>
+    <>
       <AssisQ_Nav qNumber={4} onClick={() => onProceed()} />
 
-      <Paper elevation={10} className={Styles.body_2}>
-        <Typography variant="body1">
-          <b> During the past three months</b>, how often has your use of these
+      <div className={Styles.root_2}>
+        <div className={Styles.question_head}>
+          <i> During the past three months</i>, how often has your use of these
           substances listed below led to health, social, legal or financial
           problems?
-        </Typography>
-        <Divider />
+        </div>
 
-        <TableContainer component={Paper}>
-          <Table
-            className={classes.table}
-            size="small"
-            aria-label="a dense table"
-          >
-            <TableHead className={classes.tb_head}>
-              <TableRow>
-                <TableCell padding="checkbox"></TableCell>
-                <TableCell></TableCell>
-                <TableCell
-                  className={clsx(classes.rot, classes.rot_gray)}
-                  align="center"
-                  padding="checkbox"
-                >
-                  Never
-                </TableCell>
-                <TableCell
-                  className={clsx(classes.rot, classes.rot_white)}
-                  align="center"
-                  padding="checkbox"
-                >
-                  Once or Twice
-                </TableCell>
-                <TableCell
-                  className={clsx(classes.rot, classes.rot_gray)}
-                  align="center"
-                  padding="checkbox"
-                >
-                  Monthly
-                </TableCell>
-                <TableCell
-                  className={clsx(classes.rot, classes.rot_white)}
-                  align="center"
-                  padding="checkbox"
-                >
-                  Weekly
-                </TableCell>
-                <TableCell
-                  className={clsx(classes.rot, classes.rot_gray)}
-                  align="center"
-                  padding="checkbox"
-                >
-                  Daily or Almost Daily
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {selectedSubstances_Q_2.map((item, index) => {
-                const keyValue = keys[item.id].value;
-                return (
-                  <TableRow key={item.id}>
-                    <TableCell padding="checkbox">{index + 1}</TableCell>
-                    <TableCell>{item.name}</TableCell>
-                    <TableCell
-                      className={classes.rot_gray}
-                      align="center"
-                      padding="checkbox"
-                    >
-                      <Radio
-                        size="small"
-                        checked={keyValue === "0"}
-                        onChange={e =>
-                          handleChange(item.id, e.target.value, e.target.name)
-                        }
-                        value="0"
-                        name="Never"
-                        inputProps={{ "aria-label": Math.random() }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      className={classes.rot_white}
-                      align="center"
-                      padding="checkbox"
-                    >
-                      <Radio
-                        size="small"
-                        checked={keyValue === "4"}
-                        onChange={e =>
-                          handleChange(item.id, e.target.value, e.target.name)
-                        }
-                        value="4"
-                        name="Once or Twice"
-                        inputProps={{ "aria-label": Math.random() }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      className={classes.rot_gray}
-                      align="center"
-                      padding="checkbox"
-                    >
-                      <Radio
-                        size="small"
-                        checked={keyValue === "5"}
-                        onChange={e =>
-                          handleChange(item.id, e.target.value, e.target.name)
-                        }
-                        value="5"
-                        name="Monthly"
-                        inputProps={{ "aria-label": Math.random() }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      className={classes.rot_white}
-                      align="center"
-                      padding="checkbox"
-                    >
-                      <Radio
-                        size="small"
-                        checked={keyValue === "6"}
-                        onChange={e =>
-                          handleChange(item.id, e.target.value, e.target.name)
-                        }
-                        value="6"
-                        name="Weekly"
-                        inputProps={{ "aria-label": Math.random() }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      className={classes.rot_gray}
-                      align="center"
-                      padding="checkbox"
-                    >
-                      <Radio
-                        size="small"
-                        checked={keyValue === "7"}
-                        onChange={e =>
-                          handleChange(item.id, e.target.value, e.target.name)
-                        }
-                        value="7"
-                        name="Daily or Almost Daily"
-                        inputProps={{ "aria-label": Math.random() }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-    </div>
+        <Hidden only={["md", "lg", "xl"]}>
+          <div className={Styles.root_2_direction_sm}>
+            Tap buttons below to choose <ArrowDownwardIcon />
+          </div>
+          {selectedSubstances_Q_2.map((item, index) => (
+            <QuestionComponentSmallScreen
+              key={index}
+              item={item}
+              keys={keys}
+              handleChange={handleChange}
+              popOverProps={{ toggleDrawer, setSelectedItemSM }}
+            />
+          ))}
+          <TemporaryDrawer
+            drawer={drawer}
+            toggleDrawer={toggleDrawer}
+            question={4}
+            keys={keys}
+            handleChange={handleChange}
+            item={selectedItemSM}
+          />
+        </Hidden>
+
+        <Hidden only={["xs", "sm"]}>
+          <div className={Styles.root_2_question}>
+            <div className={Styles.root_2_question_name}></div>
+            <div className={Styles.root_2_question_options}>Never</div>
+            <div className={Styles.root_2_question_options}>Once or Twice</div>
+            <div className={Styles.root_2_question_options}>Monthly</div>
+            <div className={Styles.root_2_question_options}>Weekly</div>
+            <div className={Styles.root_2_question_options}>
+              Daily or Almost Daily
+            </div>
+          </div>
+          {selectedSubstances_Q_2.map((item, index) => (
+            <QuestionComponentBigScreen
+              key={index}
+              item={item}
+              keys={keys}
+              handleChange={handleChange}
+            />
+          ))}
+        </Hidden>
+      </div>
+    </>
   );
 };
 

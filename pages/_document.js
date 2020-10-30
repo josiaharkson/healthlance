@@ -14,10 +14,10 @@ export default class MyDocument extends Document {
           <link rel="shortcut icon" href="/a.png" />
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap"
           />
           <link
-            href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400&display=swap"
             rel="stylesheet"
           />
         </Head>

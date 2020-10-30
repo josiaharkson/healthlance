@@ -11,14 +11,39 @@ import theme from "../src/theme";
 
 import { FullScreenLoader } from "../components/general/IsLoading";
 
+import { authorizeUser, logout } from "../store/actions/auth";
+import { getCurrentUser, validateToken } from "../services/authService";
+
 function MyApp({ Component, pageProps }) {
   const store = useStore(state => state);
+  const [wait, setWait] = React.useState(true);
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);
+    }
+
+    const user = getCurrentUser();
+    if (user) {
+      // Authenticate token
+      (async () => {
+        // Validate User LocalStorage token
+        const getUser = await validateToken();
+        if (getUser.success) {
+          // IF TOKEN VALID - Authorize user and set up persistence
+          store.dispatch(authorizeUser(getUser.user));
+          return setWait(false);
+        } else {
+          // IF TOKEN IS NOT VALID OR HAS EXPIRED - Logout, remove token and clean redux state
+          store.dispatch(logout());
+          return setWait(false);
+        }
+      })();
+      return setWait(false);
+    } else {
+      return setWait(false);
     }
   }, []);
 

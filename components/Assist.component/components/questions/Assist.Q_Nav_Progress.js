@@ -16,7 +16,7 @@ const getProgress = questionHistory => {
 const getQeustionNumber = questionHistory => {
   const current = questionHistory[0];
   if (current === "Home") return "Home";
-  if (current === "Feedback_Report") return "Feedback_Report";
+  if (current === "Feedback_Report") return "Completed!";
   if (current[1] === "_") return "Question " + current[2];
 
   return "UNDEFINED QUESTION NUMBER";
