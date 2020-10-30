@@ -16,7 +16,7 @@
 ## Technologies Used
 
 - Server - Node.js (Next.js / Express)
-- Frontend - Next.js,React.js,Material UI,Redux
+- Frontend - (Next.js, React.js), Material UI, Redux, Axios, Swr
 - API - Next.js API Routing (REST)
 - Heroku For Hosting
 
