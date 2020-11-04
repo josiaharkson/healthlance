@@ -78,7 +78,7 @@ const Index = () => {
           <div className={Styles.title}>Contact Us</div>
           <div className={Styles.sub}>
             For inquiry and support kindly send a message to{" "}
-            <b>healthlance@gmail.com</b>
+            <b>arksonjosiah@gmail.com</b>
           </div>
         </div>
       </div>
