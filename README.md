@@ -24,3 +24,5 @@
 ## Author
 
 - [Josiah Arkson](https://github.com/josiaharkson)
+
+### Application deployed on Heroku. https://healthlance.herokuapp.com/
