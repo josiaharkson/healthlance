@@ -131,7 +131,7 @@ const NavBar = ({ isAuthenticated, logout }) => {
 
   const UserBtns = (
     <>
-      <NextLink href="/profile">
+      <NextLink href="/">
         <Button style={{ color: "inherit", textTransform: "capitalize" }}>
           Go to Home
         </Button>
