@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -50,9 +49,18 @@ export default function SimpleDialog(props) {
       selectedValue="dd"
     >
       <DialogTitle id="simple-dialog-title">
-        Assign a name to the new result
+        <b
+          style={{
+            width: "100%",
+            textAlign: "center",
+            display: "block",
+            color: "#0e4274",
+          }}
+        >
+          Assign a name{" "}
+        </b>
       </DialogTitle>
-      <div style={{ padding: 40 }}>
+      <div style={{ padding: 40, paddingTop: 0 }}>
         <TextField
           name="report_name"
           variant={"outlined"}
@@ -84,9 +92,3 @@ export default function SimpleDialog(props) {
     </Dialog>
   );
 }
-
-SimpleDialog.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  selectedValue: PropTypes.string.isRequired,
-};

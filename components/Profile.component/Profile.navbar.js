@@ -1,5 +1,6 @@
 import React from "react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Slide from "@material-ui/core/Slide";
 import Hidden from "@material-ui/core/Hidden";
@@ -79,6 +80,9 @@ const LinkXS = ({ to, text }) => {
 };
 
 const NavBar = ({ isAuthenticated, logout }) => {
+  const router = useRouter();
+  const { pathname } = router;
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -129,7 +133,7 @@ const NavBar = ({ isAuthenticated, logout }) => {
     <>
       <NextLink href="/profile">
         <Button style={{ color: "inherit", textTransform: "capitalize" }}>
-          Go to my profile
+          Go to Home
         </Button>
       </NextLink>
 
@@ -277,9 +281,9 @@ const DropDown = ({ toggle, toggleDrawer, isAuthenticated, logout }) => {
         </>
       ) : (
         <>
-          <NextLink href="/profile">
+          <NextLink href="/">
             <Button variant="contained" color="primary" className={classes.btn}>
-              Go to my profile
+              Go to Home
             </Button>
           </NextLink>
 

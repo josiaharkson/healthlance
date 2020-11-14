@@ -30,6 +30,8 @@ import {
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Feedback_Save_dialog from "../sub_components/Feedback_save.dialog";
 
+import AuthModal from "../../../ModalAuth.component";
+
 const useStyles = makeStyles(theme => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -105,8 +107,8 @@ const Index = props => {
       <AssisQ_Nav qNumber={"REPORT"} onClick={() => onProceed()} />
       <div className={Styles.root_2}>
         <div className={Styles.question_head}>
-          <h1>Welcome To feedback report!</h1>
-          <h3>Congratulaions You Have Completed The Questions Successfully</h3>
+          <h1>Feedback report</h1>
+          <h3>Congratulaions You Have Completed The Questions Successfully!</h3>
 
           <Button
             color="primary"
@@ -151,10 +153,23 @@ const DialogComponent = ({ handleClose, results, substances, answers, id }) => {
   const [type, setType] = React.useState("");
   const [msg, setMsg] = React.useState("");
 
+  // AUTH DIALOG PROPS
+  const [openAuth, setOpenAuth] = React.useState(false);
+
+  const handleClickOpenAuth = () => {
+    setOpenAuth(true);
+  };
+
+  const handleCloseAuth = value => {
+    setOpenAuth(false);
+  };
+
   // DIALOG PROPS
   const [openD, setOpenD] = React.useState(false);
 
   const handleClickOpen_dialog = () => {
+    if (!id || !id.length) return setOpenAuth(true);
+
     setOpenD(true);
   };
 
@@ -170,6 +185,12 @@ const DialogComponent = ({ handleClose, results, substances, answers, id }) => {
 
   return (
     <div>
+      <AuthModal
+        open={openAuth}
+        handleClickOpen={handleClickOpenAuth}
+        handleClose={handleCloseAuth}
+      />
+
       {open && (
         <SnackBar
           handleClose={() => setOpen(false)}

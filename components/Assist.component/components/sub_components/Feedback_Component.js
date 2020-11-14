@@ -103,6 +103,7 @@ export const FirstComp = () => {
 
 export const SecondComp = ({ results, substances }) => {
   const classes = useStyles();
+
   if (!results) return null;
   const { getRiskLevels, Q_8, SUB_J } = results;
 
@@ -112,7 +113,10 @@ export const SecondComp = ({ results, substances }) => {
         if (item.substance === "J")
           return (
             <React.Fragment key={item.value + Math.random()}>
-              <Accordion className={classes.accordion}>
+              <Accordion
+                className={classes.accordion}
+                TransitionProps={{ unmountOnExit: true }}
+              >
                 <AccordionSummary
                   expandIcon={<span></span>}
                   aria-controls={`panel1a-content-${item.value}`}
@@ -126,7 +130,7 @@ export const SecondComp = ({ results, substances }) => {
                       <b>Risk Level:</b> {item.riskLevel}{" "}
                       <RiskColored type={item.riskLevel.toLowerCase()} ml="1" />{" "}
                     </div>
-                  <div>Substance Involvement Score: {item.value}</div>  
+                    <div>Substance Involvement Score: {item.value}</div>
                   </div>
                 </AccordionSummary>
               </Accordion>

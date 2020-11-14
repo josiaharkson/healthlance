@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import axios from "axios";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
@@ -14,17 +13,15 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { authorizeUser } from "../../store/actions/auth";
+import SnackBar from "../general/SnackBar";
+import { FullScreenLoader as IsLoadingGIF } from "../general/IsLoading";
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    marginTop: 90,
+    marginTop: 10,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-
-    [theme.breakpoints.up("md")]: {
-      marginTop: 130,
-    },
   },
 
   form: {
@@ -37,6 +34,10 @@ const useStyles = makeStyles(theme => ({
   title: {
     color: "#504a4a",
     paddingBottom: 20,
+    [theme.breakpoints.down("sm")]: {
+      paddingBottom: 0,
+      paddingTop: 20,
+    },
   },
   root: {
     flexGrow: 1,
@@ -51,11 +52,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Login(props) {
+function Login({ setView, handleClose, ...props }) {
   const classes = useStyles();
+
+  const [open, setOpen] = React.useState(false);
+  const [type, setType] = React.useState("");
+  const [msg, setMsg] = React.useState("");
 
   const [emailorusername, setEmailorusername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [gifIsLoading, setGifIsLoading] = React.useState(false);
 
   const [values, setValues] = React.useState({
     amount: "",
@@ -85,21 +91,52 @@ function Login(props) {
       .post("/api/user/login", data)
       .then(res => {
         if (res.data.success) {
+          setGifIsLoading(true);
           props.authorizeUser({ ...res.data.user, token: res.data.token });
-          return setUserLoading(false);
+
+          setMsg("Login Success!");
+          setType("success");
+          setOpen(true);
+          setTimeout(() => {
+            setUserLoading(false);
+            handleClose();
+            setGifIsLoading(false);
+          }, 3000);
+
+          return;
         }
 
-        setError(res.data.msg ? res.data.msg : "");
+        // setError(res.data.msg ? res.data.msg : "");
+
+        setMsg(res.data.msg ? res.data.msg : "Error Occured!");
+        setType("error");
+        setOpen(true);
+
         setUserLoading(false);
       })
       .catch(err => {
-        setError("Connection Error");
+        setMsg("Connection Error");
+
+        setType("error");
+        setOpen(true);
+
         setUserLoading(false);
       });
   };
 
   return (
     <>
+      {gifIsLoading && <IsLoadingGIF />}
+
+      {open && (
+        <SnackBar
+          handleClose={() => setOpen(false)}
+          type={type}
+          message={msg}
+          zIndex={10000}
+        />
+      )}
+
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
           <Typography component="h1" variant="h5" className={classes.title}>
@@ -112,6 +149,7 @@ function Login(props) {
                 <TextField
                   name="emailorusername"
                   variant={"outlined"}
+                  margin="dense"
                   required
                   fullWidth
                   id="emailorusername"
@@ -130,6 +168,7 @@ function Login(props) {
                   type="password"
                   label="Password"
                   variant={"outlined"}
+                  margin="dense"
                   fullWidth
                   value={values.password}
                   onChange={handleChange("password")}
@@ -181,18 +220,17 @@ function Login(props) {
             </Button>
           </form>
 
-          <Link href="/signup">
-            <div
-              style={{
-                cursor: "pointer",
-                textAlign: "left",
-                userSelect: "none",
-                width: "100%",
-              }}
-            >
-              Don't have an account yet! Click to sign up!
-            </div>
-          </Link>
+          <div
+            style={{
+              cursor: "pointer",
+              textAlign: "left",
+              userSelect: "none",
+              width: "100%",
+            }}
+            onClick={() => setView(1)}
+          >
+            Don't have an account yet! Click to sign up!
+          </div>
         </div>
       </Container>
     </>

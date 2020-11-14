@@ -100,7 +100,7 @@ const MainImage = () => {
     <div className={Styles.sliding_quote_wrapper}>
       <Pagination dots={3} index={index} onChangeIndex={handleChangeIndex} />
       <AutoPlaySwipeableViews
-        interval={2000}
+        interval={5000}
         index={index}
         onChangeIndex={handleChangeIndex}
       >

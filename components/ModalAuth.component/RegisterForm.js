@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-import Link from "next/link";
 
 import { connect } from "react-redux";
 // import { TextField as FTextField } from "@fluentui/react/lib-commonjs/TextField";
@@ -29,7 +28,7 @@ import { authorizeUser } from "../../store/actions/auth";
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    marginTop: 90,
+    marginTop: 10,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -48,6 +47,11 @@ const useStyles = makeStyles(theme => ({
   title: {
     color: "#504a4a",
     paddingBottom: 20,
+
+    [theme.breakpoints.down("sm")]: {
+      paddingBottom: 0,
+      paddingTop: 20,
+    },
   },
   cssLabel: {
     color: "#a79e9e",
@@ -60,7 +64,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Register(props) {
+function Register({ setView, handleClose, ...props }) {
   const classes = useStyles();
 
   const [fullname, setFullname] = React.useState("");
@@ -108,7 +112,6 @@ function Register(props) {
     axios
       .post("/api/user/register", data)
       .then(res => {
-        console.log(res.data);
         if (res.data.success) {
           setGifIsLoading(true);
 
@@ -121,11 +124,16 @@ function Register(props) {
           setMsg("Your registration was successful!");
           setType("success");
           setOpen(true);
-          return setIsLoading(false);
+          setTimeout(() => {
+            setIsLoading(false);
+            handleClose();
+          }, 3000);
+
+          return;
         }
 
         setMsg(res.data.msg);
-        setType("warning");
+        setType("error");
         setOpen(true);
         return setIsLoading(false);
       })
@@ -179,8 +187,8 @@ function Register(props) {
                   type="email"
                   label="Email Address"
                   onChange={e => setEmail(e.target.value)}
-                  margin="dense"
                   required
+                  margin="dense"
                 />
               </Grid>
 
@@ -190,8 +198,8 @@ function Register(props) {
                   type="text"
                   label="Username"
                   onChange={e => setUsername(e.target.value)}
-                  margin="dense"
                   required
+                  margin="dense"
                 />
               </Grid>
 
@@ -261,18 +269,17 @@ function Register(props) {
             </Button>
           </form>
 
-          <Link href="login">
-            <div
-              style={{
-                cursor: "pointer",
-                textAlign: "left",
-                userSelect: "none",
-                width: "100%",
-              }}
-            >
-              Already have an account! Click to login!
-            </div>
-          </Link>
+          <div
+            style={{
+              cursor: "pointer",
+              textAlign: "left",
+              userSelect: "none",
+              width: "100%",
+            }}
+            onClick={() => setView(0)}
+          >
+            Already have an account! Click to login!
+          </div>
         </div>
       </Container>
     </div>
