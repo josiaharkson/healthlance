@@ -166,9 +166,7 @@ const NavBar = ({ isAuthenticated, logout }) => {
       >
         <div className={Styles.root}>
           <div className={Styles.left}>
-            <NextLink href="/">
-              <h1 className={Styles.logo}>HealthLance</h1>
-            </NextLink>
+            <h1 className={Styles.logo}>HealthLance</h1>
           </div>
           <Hidden only={["xs", "sm"]}>
             <div className={Styles.middle}>
