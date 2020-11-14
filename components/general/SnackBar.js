@@ -5,7 +5,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import MuiAlert from "@material-ui/lab/Alert";
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   close: {
     padding: theme.spacing(0.5),
   },
@@ -14,11 +14,11 @@ const useStyles = makeStyles((theme) => ({
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-export default function SimpleSnackbar(props) {
+export default function SimpleSnackbar({ zIndex, ...props }) {
   const classes = useStyles();
 
   return (
-    <div>
+    <div style={{ zIndex: zIndex ? zIndex : 1000 }}>
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",
@@ -26,7 +26,7 @@ export default function SimpleSnackbar(props) {
         }}
         open={true}
         autoHideDuration={6000}
-        onClose={() => props.handleClose()}
+        onClose={props.handleClose}
         ContentProps={{
           "aria-describedby": "message-id",
         }}

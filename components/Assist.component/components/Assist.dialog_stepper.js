@@ -68,14 +68,16 @@ const useStyles = makeStyles(theme => ({
 
 function StepperComp({ checked, setChecked, user }) {
   const classes = useStyles();
-  const { fullname } = user;
+  const fullname = Object.keys(user).length
+    ? `Hi ${user.fullname.split(" ")[0]}!`
+    : "Greetings!";
   const matches = useMediaQuery("(min-width:600px)");
 
   const texts = {
     one: (
       <>
         <div style={{ marginBottom: -10, marginTop: matches ? 0 : -30 }}>
-          Hi! {fullname.split(" ")[0]}
+          {fullname}
         </div>{" "}
         <br />
         Thank you for agreeing to take part in this brief interview about

@@ -94,7 +94,8 @@
   }
 
   .body_text_1 {
-    font-size: 35px;
+    font-size: 30px;
+    padding: 0 10px 10px 10px;
   }
 
   .body_text_2 {
