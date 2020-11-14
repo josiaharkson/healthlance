@@ -66,10 +66,10 @@ const Index = () => {
             </li>
             <li>
               <a
-                href="Long-Term Strategies for Overcoming Addiction"
+                href="https://www.addictionsandrecovery.org/five-rules-of-recovery.htm"
                 target="_blank"
               >
-                Long-Term Strategies for Overcoming Addiction
+                The Five Rules of Recovery and Relapse Prevention
               </a>
             </li>
           </ul>
