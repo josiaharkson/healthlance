@@ -25,4 +25,4 @@
 
 - [Josiah Arkson](https://github.com/josiaharkson)
 
-### Live Application deployed on Heroku. https://healthlance.herokuapp.com/
+### Live Application deployed on Vercel. https://healthlance.vercel.app/
