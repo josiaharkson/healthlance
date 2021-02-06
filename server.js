@@ -1,4 +1,6 @@
 const express = require("express");
+const app = express();
+
 const next = require("next");
 const port = parseInt(process.env.PORT, 10) || 5000;
 const dev = process.env.NODE_ENV !== "production";
@@ -9,8 +11,14 @@ const mongoose = require("mongoose");
 const { serverRuntimeConfig } = require("next/config").default();
 const MONGO_URI = serverRuntimeConfig.MONGO_URI;
 
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
 nextApp.prepare().then(() => {
-  const app = express();
   app.use(express.json());
 
   mongoose.connect(
@@ -37,8 +45,26 @@ nextApp.prepare().then(() => {
     return handle(req, res);
   });
 
-  app.listen(port, err => {
-    if (err) throw err;
-    console.log(`> Ready on http://localhost:${port}`);
+  io.on("connection", (socket) => {
+    console.log(`Client ${socket.id} connected`);
+
+    // Join a conversation
+    const { roomId } = socket.handshake.query;
+    socket.join(roomId);
+
+    // Listen for new messages
+    socket.on(NEW_CHAT_MESSAGE_EVENT, (data) => {
+      io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, data);
+    });
+
+    // Leave the room if the user closes the socket
+    socket.on("disconnect", () => {
+      console.log(`Client ${socket.id} diconnected`);
+      socket.leave(roomId);
+    });
+  });
+
+  server.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
   });
 });
