@@ -1,6 +1,18 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, {
+  handlePreflightRequest: (req, res) => {
+    const headers = {
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
+      "Access-Control-Allow-Credentials": true,
+    };
+    res.writeHead(200, headers);
+    res.end();
+  },
+});
 
 const next = require("next");
 const port = parseInt(process.env.PORT, 10) || 5000;
@@ -12,35 +24,28 @@ const mongoose = require("mongoose");
 const { serverRuntimeConfig } = require("next/config").default();
 const MONGO_URI = serverRuntimeConfig.MONGO_URI;
 
+io.on("connection", (socket) => {
+  console.log(`Client ${socket.id} connected`);
+
+  // Join a conversation
+  const { roomId } = socket.handshake.query;
+  socket.join(roomId);
+
+  // Listen for new messages
+  socket.on(NEW_CHAT_MESSAGE_EVENT, (data) => {
+    io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, data);
+  });
+
+  // Leave the room if the user closes the socket
+  socket.on("disconnect", () => {
+    console.log(`Client ${socket.id} diconnected`);
+    socket.leave(roomId);
+  });
+});
+
 nextApp.prepare().then(() => {
   app.use(express.json());
   app.use(cors());
-
-  const server = require("http").createServer(app);
-  const io = require("socket.io")(server, {
-    cors: {
-      origin: "*",
-    },
-  });
-
-  io.on("connection", (socket) => {
-    console.log(`Client ${socket.id} connected`);
-
-    // Join a conversation
-    const { roomId } = socket.handshake.query;
-    socket.join(roomId);
-
-    // Listen for new messages
-    socket.on(NEW_CHAT_MESSAGE_EVENT, (data) => {
-      io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, data);
-    });
-
-    // Leave the room if the user closes the socket
-    socket.on("disconnect", () => {
-      console.log(`Client ${socket.id} diconnected`);
-      socket.leave(roomId);
-    });
-  });
 
   mongoose.connect(
     MONGO_URI,
